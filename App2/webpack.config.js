@@ -13,7 +13,8 @@ let config = {
 	},
 	entry: {
 		'ext-libs': ['react', 'react-dom', 'react-redux', 'redux'],
-		main: ['./app-src/js/main.js']
+		'main': ['./app-src/js/main.js'],
+		'main-2': ['./app-src/js/main-2.js']
 	},
 	output: {
 		path: './public/js',
