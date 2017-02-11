@@ -14,13 +14,17 @@ app.use(express.static(path.join(__dirname, root), {
 	maxAge:7*24*3600
 }));
 
-/// error handlers
+app.get('*', function(req, res, next) {
+	var err = new Error();
+	err.status = 404;
+	next(err);
+});
+
 app.use(function (err, req, res, next) {
-	res.status(err.status ? err.status : 500);
-	res.render('error', {
-		title: 'Error',
-		error: ((app.get('env') === 'production') ? {status: err.status, message: err.message} : err)
-	});
+	res
+		.status(err.status ? err.status : 500)
+		.send({error:app.get('env') === 'production' ? {status: err.status, message: err.message} : err});
+	/*res.render('error', {error:app.get('env') === 'production' ? {status: err.status, message: err.message} : err})*/;
 });
 
 var port = parseInt(process.env.SRV_PORT) || config.http.port;

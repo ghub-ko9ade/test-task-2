@@ -1,10 +1,7 @@
 ﻿'use strict';
 
 /*
-* Для сохранения удобной возможности легко смотреть это в браузере
-* не будем дробить это на отдельные файлы модулей.
-*
-* Для просмотра в браузере (browse.html) закоментировать все импорты
+* Для просмотра в браузере без webpack закоментировать все импорты
 * и раскоментирорвать две константы под ними.
 */
 import React/*, {Component}*/ from 'react';
@@ -24,6 +21,9 @@ const config = {
 
 
 
+/*
+* Основной компонент - контейнер приложения
+*/
 class FlightAppCls extends React.Component {
 	constructor (props) {
 		super(props);
@@ -102,18 +102,24 @@ const FlightApp = reduxConnect(mapperStoreStateToProps, mapperDispatchToProps)(F
 
 
 
+/*
+* Внутренний компонент - селектор
+*/
 const FlightSelector = function (props) {
 	let {list, current, onChange} = props;
 	return (
 		<select className="flight-selector" value={current || ''} onChange={onChange}>
-			<option value="">Все авиакомании</option>
-			{list.length ? list.map(item => <option value={item}>{item}</option>) : null}
+			<option value="" key="0">Все авиакомании</option>
+			{list.length ? list.map(item => <option value={item} key={item}>{item}</option>) : null}
 		</select>
 	);
 }
 
 
 
+/*
+* Внутренний компонент - список
+*/
 const FlightList = function (props) {
 	let {flights, carrier} = props;
 	let list = flights.length ? (carrier ? flights.filter(item => item.carrier == carrier) : flights) : [];
@@ -126,6 +132,9 @@ const FlightList = function (props) {
 
 
 
+/*
+* Внутренний компонент - элемент списка
+*/
 const FlightEntry = function (entry) {
 	let dt1 = new Date(entry.arrival);
 	let dt2 = new Date(entry.departure);
@@ -134,7 +143,7 @@ const FlightEntry = function (entry) {
 		return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m);
 	};
 	return (
-		<div className="flight-entry">
+		<div className="flight-entry" key={entry.id}>
 			<div className="flight-entry-id">рейс № <span>{entry.id}</span></div>
 			<div className="flight-entry-direction">{entry.direction.from} - {entry.direction.to}</div>
 			<div className="flight-entry-arrival">Вылет <span className="date">{dt1.toLocaleDateString()}</span> в <span className="time">{f(dt1)}</span></div>
@@ -146,6 +155,9 @@ const FlightEntry = function (entry) {
 
 
 
+/*
+* Хранилище состояний Redux
+*/
 const createStore = function (initData) {
 	let initStates = {flightApp:{carrier:null}};
 	let reducers = {
@@ -160,7 +172,6 @@ const createStore = function (initData) {
 	};
 
 	let r = Redux.combineReducers(reducers);
-	/*let store = Redux.applyMiddleware(...)(Redux.createStore)(r, initData);*/
 	let store = Redux.createStore(r, initData);
 	return store;
 }
@@ -169,6 +180,9 @@ const store = createStore();
 
 
 
+/*
+* Внедрение в страницу
+*/
 ReactDOM.render(
 	<FlightApp store={store} />,
 	document.getElementById('react-root')

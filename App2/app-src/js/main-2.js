@@ -1,10 +1,7 @@
 ﻿'use strict';
 
 /*
-* Для сохранения удобной возможности легко смотреть это в браузере
-* не будем дробить это на отдельные файлы модулей.
-*
-* Для просмотра в браузере (browse.html) закоментировать все импорты
+* Для просмотра в браузере без webpack закоментировать все импорты
 * и раскоментирорвать две константы под ними.
 */
 import React/*, {Component}*/ from 'react';
@@ -107,8 +104,8 @@ const FlightSelector = function (props) {
 	let {list, current, onChange} = props;
 	return (
 		<select className="flight-selector" value={current || ''} onChange={onChange}>
-			<option value="">Все авиакомании</option>
-			{list.length ? list.map(item => <option value={item}>{item}</option>) : null}
+			<option value="" key="0">Все авиакомании</option>
+			{list.length ? list.map(item => <option value={item} key={item}>{item}</option>) : null}
 		</select>
 	);
 }
@@ -141,7 +138,7 @@ const FlightEntry = function (entry) {
 		return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m);
 	};
 	return (
-		<div className="flight-entry">
+		<div className="flight-entry" key={entry.id}>
 			<div className="flight-entry-id">рейс № <span>{entry.id}</span></div>
 			<div className="flight-entry-direction">{entry.direction.from} - {entry.direction.to}</div>
 			<div className="flight-entry-arrival">Вылет <span className="date">{dt1.toLocaleDateString()}</span> в <span className="time">{f(dt1)}</span></div>
@@ -164,12 +161,12 @@ const createStore = function (initData) {
 				case 'CHANGE_CARRIER':
 					return {...state, carrier:action.carrier};
 				case 'FLIGHTS_REQUEST':
-					return state/*{...state, loading:true}*/;
+					return state;
 				case 'FLIGHTS_SUCCESS':
-					return {...state, flights:action.flights/*, loading:false*/};
+					return {...state, flights:action.flights};
 				case 'FLIGHTS_ERR':
 					console.log(action.error);
-					return state/*{...state, loading:false}*/;
+					return state;
 				default:
 					return state;
 			}
@@ -178,7 +175,6 @@ const createStore = function (initData) {
 
 	let r = Redux.combineReducers(reducers);
 	let store = Redux.applyMiddleware(middleware)(Redux.createStore)(r, initData);
-	/*let store = Redux.createStore(r, initData);*/
 	return store;
 }
 

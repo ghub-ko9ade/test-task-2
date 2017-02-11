@@ -7,8 +7,7 @@
 		"start": "node dev-server.js",
 		"start-src": "set SRV_ROOT=app-src&& node dev-server.js",
 		"webpack": "webpack --config webpack.config.js --no-color --progress",
-		"webpack-prod": "set NODE_ENV=prod&& webpack --config webpack.config.js --no-color --progress",
-		"webpack-min": "webpack --config webpack.config.js --no-color --progress --optimize-minimize"
+		"webpack-prod": "set NODE_ENV=prod&& webpack --config webpack.config.js --no-color --progress --optimize-minimize"
 	},
 	"author": "",
 	"license": "",
